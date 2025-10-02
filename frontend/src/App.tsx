@@ -5,8 +5,7 @@ import Login from "./auth/login";
 const Home: React.FC = () => {
   return (
     <div>
-      <h2>Амжилттай нэвтэрлээ!</h2>
-      <p>Энэ бол Home page.</p>
+      <h2>amjilttaiiii!</h2>
     </div>
   );
 };
