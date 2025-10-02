@@ -1,3 +1,4 @@
+// src/pages/Login.tsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +26,7 @@ const Login: React.FC = () => {
       // Амжилттай login бол home руу чиглүүлэх
       navigate("/");
     } catch (err: any) {
-      if (err.response) {
+      if (err.response && err.response.data && err.response.data.error) {
         setError(err.response.data.error);
       } else {
         setError("Сервер алдаа");
@@ -36,27 +37,31 @@ const Login: React.FC = () => {
   return (
     <div className="login-container">
       <h2>Нэвтрэх</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
+      {error && <p className="error-message">{error}</p>}
+      <form onSubmit={handleSubmit} className="login-form">
+        <div className="form-group">
           <label>Утас:</label>
           <input
             type="text"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            placeholder="Утасны дугаар"
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Нууц үг:</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Нууц үг"
             required
           />
         </div>
-        <button type="submit">Нэвтрэх</button>
+        <button type="submit" className="login-button">
+          Нэвтрэх
+        </button>
       </form>
     </div>
   );
