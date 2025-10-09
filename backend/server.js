@@ -28,9 +28,9 @@ app.get('/', (req, res) => {
 //reg
 app.post('/register', async (req, res) => {
   try {
-    const { role_id = 2, phone, password } = req.body;
-    if (!phone || !password)
-      return res.status(400).json({ error: 'phone, password шаардлагатай' });
+    const { role_id, phone, password, name, email, address } = req.body;
+    if (!phone || !password || !role_id)
+      return res.status(400).json({ error: 'phone, password, role_id шаардлагатай' });
 
     const hash = await bcrypt.hash(password, 10);
 
@@ -42,26 +42,31 @@ app.post('/register', async (req, res) => {
 
         const user_id = result.insertId;
 
-        if (role_id === 2) {
-          db.query(
-            'INSERT INTO customer (user_id, cus_name, cus_email) VALUES (?, ?, ?)',
-            [user_id, '', ''],
-            (cErr) => {
-              if (cErr) return res.status(500).json({ error: 'DB алдаа (customer)' });
-              res.json({ message: 'Customer амжилттай үүслээ', userId: user_id });
-            }
-          );
-        } else if (role_id === 1) {
-          db.query(
-            'INSERT INTO organization (user_id, org_name, org_address, email) VALUES (?, ?, ?, ?)',
-            [user_id, '', '', ''],
-            (oErr) => {
-              if (oErr) return res.status(500).json({ error: 'DB алдаа (organization)' });
-              res.json({ message: 'Organization амжилттай үүслээ', userId: user_id });
-            }
-          );
-        } else {
-          res.status(400).json({ error: 'Тодорхойгүй role_id' });
+        switch (role_id) {
+          case 1: // superadmin
+          case 2: // organization
+            db.query(
+              'INSERT INTO organization (user_id, org_name, org_address, email) VALUES (?, ?, ?, ?)',
+              [user_id, name || '', address || '', email || ''],
+              (oErr) => {
+                if (oErr) return res.status(500).json({ error: 'DB алдаа (organization)' });
+                res.json({ message: 'Organization амжилттай үүслээ', userId: user_id });
+              }
+            );
+            break;
+          case 3: // customer
+          case 4: // org-employee
+            db.query(
+              'INSERT INTO customer (user_id, cus_name, cus_email) VALUES (?, ?, ?)',
+              [user_id, name || '', email || ''],
+              (cErr) => {
+                if (cErr) return res.status(500).json({ error: 'DB алдаа (customer)' });
+                res.json({ message: 'Customer амжилттай үүслээ', userId: user_id });
+              }
+            );
+            break;
+          default:
+            res.status(400).json({ error: 'Тодорхойгүй role_id' });
         }
       }
     );
@@ -85,23 +90,27 @@ app.post('/login', (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) return res.status(401).json({ error: 'Нууц үг буруу' });
 
-    if (user.role_id === 2) { 
-      db.query('SELECT * FROM customer WHERE user_id = ?', [user.user_id], (cErr, cRes) => {
-        if (cErr) return res.status(500).json({ error: 'DB алдаа (customer)' });
-        const payload = { id: user.user_id, role: 'customer', info: cRes[0] };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, role: 'customer', data: cRes[0] });
-      });
-    } else if (user.role_id === 1) { 
-      db.query('SELECT * FROM organization WHERE user_id = ?', [user.user_id], (oErr, oRes) => {
-        if (oErr) return res.status(500).json({ error: 'DB алдаа (organization)' });
-        const payload = { id: user.user_id, role: 'organization', info: oRes[0] };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, role: 'organization', data: oRes[0] });
-      });
-    } else {
-      res.status(400).json({ error: 'Тодорхойгүй role_id' });
+    let tableName = '';
+    let roleName = '';
+    switch (user.role_id) {
+      case 1:
+        tableName = 'organization'; roleName = 'superadmin'; break;
+      case 2:
+        tableName = 'organization'; roleName = 'organization'; break;
+      case 3:
+        tableName = 'customer'; roleName = 'customer'; break;
+      case 4:
+        tableName = 'customer'; roleName = 'org-employee'; break;
+      default:
+        return res.status(400).json({ error: 'Тодорхойгүй role_id' });
     }
+
+    db.query(`SELECT * FROM ${tableName} WHERE user_id = ?`, [user.user_id], (tErr, tRes) => {
+      if (tErr) return res.status(500).json({ error: `DB алдаа (${tableName})` });
+      const payload = { id: user.user_id, role: roleName, info: tRes[0] };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.json({ token, role: roleName, data: tRes[0] });
+    });
   });
 });
 
