@@ -65,19 +65,19 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-slate-700 text-white py-2 rounded hover:bg-slate-800 transition"
+            className="w-full bg-primary text-white py-2 rounded hover:bg-slate-800 transition"
           >
             Нэвтрэх
           </button>
 
           {/* res password */}
-          {/* <div className="mt-2 flex items-center justify-end text-slate-700 hover:underline cursor-pointer">
+          {/* <div className="mt-2 flex items-center justify-end text-primary hover:underline cursor-pointer">
             <span>Нууц үг сэргээх</span>
           </div> */}
         </form>
       </div>
 
-      <div className="w-1/2 bg-slate-700 flex flex-col justify-center items-center text-white p-8">
+      <div className="w-1/2 bg-primary flex flex-col justify-center items-center text-white p-8">
         <h1 className="text-4xl font-bold mb-4">Тавтай морил!</h1>
         <p className="text-lg text-center max-w-sm opacity-90">
           Та системд хандахын тулд утасны дугаар болон нууц үгээ ашиглана уу.

@@ -16,7 +16,7 @@ const OrgTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const API_URL = "http://localhost:5000/api/organization";
+  const API_URL = "http://localhost:5000/api/organizations";
 
   // API
   const fetchOrganizations = async () => {
