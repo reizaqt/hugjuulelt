@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import OrgCrudSearch from "./orgCrudSearch";
+import CreateOrg from "./crud/createOrg"; // CreateOrg-ийн файл замыг зөв зааж өгөх
 
 interface Org {
   org_id: number;
@@ -34,18 +34,11 @@ const OrgTable: React.FC = () => {
         <h1 className="text-3xl font-bold">Байгууллагууд</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-slate-700 hover:bg-slate-900 text-white text-sm px-4 py-2 rounded"
         >
           Байгууллага нэмэх
         </button>
       </div>
-
-      {showCreateModal && (
-        <OrgCrudSearch
-          onClose={() => setShowCreateModal(false)}
-          onAdded={fetchOrganizations}
-        />
-      )}
 
       <table className="w-full border rounded">
         <thead>
@@ -65,6 +58,14 @@ const OrgTable: React.FC = () => {
           ))}
         </tbody>
       </table>
+
+      {/* CreateOrg modal */}
+      {showCreateModal && (
+        <CreateOrg
+          onAdded={() => fetchOrganizations()} // шинэ жагсаалт татах
+          onClose={() => setShowCreateModal(false)} // modal хаах
+        />
+      )}
     </div>
   );
 };
