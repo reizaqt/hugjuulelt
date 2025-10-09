@@ -3,20 +3,18 @@ const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+require('dotenv').config(); // .env
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-const DB_CONFIG = {
-  host: 'localhost',
-  user: 'root',
-  password: 'Password@123',
-  database: 'beauty_salon_booking'
-};
-const JWT_SECRET = 'secretKey123';
-
-const db = mysql.createConnection(DB_CONFIG);
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+});
 
 db.connect((err) => {
   if (err) console.error('Database холболт амжилтгүй:', err);
@@ -27,7 +25,7 @@ app.get('/', (req, res) => {
   res.send('Server ажиллаж байна!');
 });
 
-// ---------- Register ----------
+//reg
 app.post('/register', async (req, res) => {
   try {
     const { role_id = 2, phone, password } = req.body;
@@ -53,7 +51,7 @@ app.post('/register', async (req, res) => {
               res.json({ message: 'Customer амжилттай үүслээ', userId: user_id });
             }
           );
-        } else if (role_id === 1) { 
+        } else if (role_id === 1) {
           db.query(
             'INSERT INTO organization (user_id, org_name, org_address, email) VALUES (?, ?, ?, ?)',
             [user_id, '', '', ''],
@@ -73,7 +71,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// ---------- Login ----------
+// login
 app.post('/login', (req, res) => {
   const { phone, password } = req.body;
   if (!phone || !password)
@@ -91,14 +89,14 @@ app.post('/login', (req, res) => {
       db.query('SELECT * FROM customer WHERE user_id = ?', [user.user_id], (cErr, cRes) => {
         if (cErr) return res.status(500).json({ error: 'DB алдаа (customer)' });
         const payload = { id: user.user_id, role: 'customer', info: cRes[0] };
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token, role: 'customer', data: cRes[0] });
       });
     } else if (user.role_id === 1) { 
       db.query('SELECT * FROM organization WHERE user_id = ?', [user.user_id], (oErr, oRes) => {
         if (oErr) return res.status(500).json({ error: 'DB алдаа (organization)' });
         const payload = { id: user.user_id, role: 'organization', info: oRes[0] };
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token, role: 'organization', data: oRes[0] });
       });
     } else {
@@ -107,25 +105,26 @@ app.post('/login', (req, res) => {
   });
 });
 
-// ---------- JWT middleware ----------
+// ----------------- JWT middleware -----------------
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Token байхгүй' });
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ error: 'Token буруу эсвэл хугацаа дууссан' });
     req.user = user;
     next();
   });
 }
 
-// ---------- Protected route ----------
+// ----------------- Protected route -----------------
 app.get('/protected', authenticateToken, (req, res) => {
   res.json({ message: 'Хамгаалсан маршрут руу амжилттай оров', user: req.user });
 });
 
+const organizationRoutes = require('./routes/organizationRoutes');
+app.use('/api/organizations', organizationRoutes);
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server http://localhost:${PORT}`));
