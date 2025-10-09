@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/login/login";
-import OrgCrudPage from "./pages/superadmin/organization/orgCrudPage"
+import OrgTable from "./pages/superadmin/organization/orgTable";
 const Home: React.FC = () => {
   return (
     <div>
@@ -16,7 +16,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/superadmin-orgcrud" element={<OrgCrudPage />} />
+        <Route path="/superadmin-orgcrud" element={<OrgTable />} />
       </Routes>
     </Router>
   );
