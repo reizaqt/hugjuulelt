@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/login/login";
 import OrgTable from "./pages/superadmin/organization/orgTable";
+import ServiceCategoryPage from "./pages/superadmin/service/serviceCategoryPage";
+import SuperAdminLayout from "./pages/superadmin/components/superAdminLayout";
 const Home: React.FC = () => {
   return (
     <div>
@@ -16,7 +18,11 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/superadmin-orgcrud" element={<OrgTable />} />
+
+        <Route path="/superadmin" element={<SuperAdminLayout />}>
+        <Route path="organization" element={<OrgTable />} />
+        <Route path="service-category" element={<ServiceCategoryPage />} />
+      </Route>
       </Routes>
     </Router>
   );
