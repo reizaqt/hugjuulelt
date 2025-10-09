@@ -15,7 +15,7 @@ const CreateOrg: React.FC<Props> = ({ onAdded, onClose }) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
-  const API_URL = "http://localhost:5000/api/organization";
+  const API_URL = "http://localhost:5000/api/organizations";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
