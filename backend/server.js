@@ -144,7 +144,8 @@ app.use('/api/position-category', positionCategoryRoutes);
 const statusCategoryRoutes = require('./routes/statusCategoryRoutes');
 app.use('/api/status-category', statusCategoryRoutes);
 
+const paymentMethodRoutes = require('./routes/paymentMethodRoutes');
+app.use('/api/payment-method', paymentMethodRoutes);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server http://localhost:${PORT}`));
-
-

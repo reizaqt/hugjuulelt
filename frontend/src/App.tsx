@@ -6,6 +6,7 @@ import ServiceCategoryPage from "./pages/superadmin/service/serviceCategoryPage"
 import SuperAdminLayout from "./pages/superadmin/components/superAdminLayout";
 import PositionCategoryPage from "./pages/superadmin/position/positionCategoryPage";
 import StatusCategoryPage from "./pages/superadmin/status/statusCategoryPage";
+import PaymentMethodPage from "./pages/superadmin/payment/paymentMethodPage";
 const Home: React.FC = () => {
   return (
     <div>
@@ -26,6 +27,7 @@ const App: React.FC = () => {
         <Route path="service-category" element={<ServiceCategoryPage />} />
         <Route path="position" element={<PositionCategoryPage />} />
         <Route path="appointment-status" element={<StatusCategoryPage />} />
+        <Route path="payment-method" element={<PaymentMethodPage />} />
       </Route>
       </Routes>
     </Router>
