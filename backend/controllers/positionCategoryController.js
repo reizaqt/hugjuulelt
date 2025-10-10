@@ -2,7 +2,7 @@ const db = require('../db');
 
 // GET all
 const getAllCategories = (req, res) => {
-  db.query('SELECT * FROM service_category', (err, results) => {
+  db.query('SELECT * FROM positions', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
@@ -10,13 +10,13 @@ const getAllCategories = (req, res) => {
 
 // CREATE
 const createCategory = (req, res) => {
-  const { sc_name, sc_desc } = req.body;
+  const { position_name } = req.body;
   db.query(
-    'INSERT INTO service_category (sc_name, sc_desc) VALUES (?, ?)',
-    [sc_name, sc_desc],
+    'INSERT INTO positions (position_name) VALUES (?)',
+    [position_name],
     (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: result.insertId, sc_name, sc_desc });
+      res.json({ id: result.insertId, position_name });
     }
   );
 };
@@ -24,13 +24,13 @@ const createCategory = (req, res) => {
 // UPDATE
 const updateCategory = (req, res) => {
   const { id } = req.params;
-  const { sc_name, sc_desc } = req.body;
+  const { position_name } = req.body;
   db.query(
-    'UPDATE service_category SET sc_name=?, sc_desc=? WHERE sc_id=?',
-    [sc_name, sc_desc, id],
+    'UPDATE positions SET position_name=? WHERE position_id=?',
+    [position_name, id],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ id, sc_name, sc_desc });
+      res.json({ id, position_name });
     }
   );
 };
@@ -38,7 +38,7 @@ const updateCategory = (req, res) => {
 // DELETE
 const deleteCategory = (req, res) => {
   const { id } = req.params;
-  db.query('DELETE FROM service_category WHERE sc_id=?', [id], (err) => {
+  db.query('DELETE FROM positions WHERE position_id=?', [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
     res.sendStatus(204);
   });
