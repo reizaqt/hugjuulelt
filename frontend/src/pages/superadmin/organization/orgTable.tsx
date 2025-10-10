@@ -197,9 +197,9 @@ const OrgTable: React.FC = () => {
         />
       )}
 
-      {/* ✅ Устгах баталгаажуулах Dialog */}
       {showConfirm && (
         <Dialog
+          open={showConfirm}
           title="Устгах уу?"
           message="Та энэ байгууллагыг устгахдаа итгэлтэй байна уу?"
           onConfirm={confirmDelete}
