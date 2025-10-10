@@ -5,6 +5,7 @@ import {
   updateServiceCategory,
   deleteServiceCategory,
 } from "../../../services/serviceCategoryService";
+import Dialog from "../components/dialog";
 
 interface Category {
   sc_id: number;
@@ -16,8 +17,8 @@ export default function ServiceCategoryPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [form, setForm] = useState({ sc_name: "", sc_desc: "" });
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [deleteId, setDeleteId] = useState<number | null>(null); // ✅ устгах modal-ийн ID
-  const [showConfirm, setShowConfirm] = useState(false); // ✅ modal харагдах эсэх
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
     loadCategories();
@@ -70,7 +71,6 @@ export default function ServiceCategoryPage() {
         Үйлчилгээний ангилал
       </h1>
 
-      {/* form */}
       <form onSubmit={handleSubmit} className="mb-4 flex gap-2">
         <input
           type="text"
@@ -92,14 +92,13 @@ export default function ServiceCategoryPage() {
         </button>
       </form>
 
-      {/* table */}
       <table className="w-full border">
         <thead>
           <tr className="bg-gray-100">
             <th className="border p-2">#</th>
             <th className="border p-2">Нэр</th>
             <th className="border p-2">Тайлбар</th>
-            <th className="border p-2">Үйлдэл</th>
+            <th className="border p-2"></th>
           </tr>
         </thead>
         <tbody>
@@ -127,31 +126,13 @@ export default function ServiceCategoryPage() {
         </tbody>
       </table>
 
-      {/*Custom Confirm Modal */}
-      {showConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white rounded-2xl p-6 shadow-lg text-center max-w-sm w-full animate-fadeIn">
-            <h2 className="text-lg font-semibold mb-3">Устгах уу?</h2>
-            <p className="text-gray-600 mb-5 text-sm">
-              Та энэ ангиллыг устгахдаа итгэлтэй байна уу?
-            </p>
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={confirmDelete}
-                className="px-4 py-2 rounded bg-red-400 hover:bg-red-700 text-white text-sm"
-              >
-                Тийм
-              </button>
-              <button
-                onClick={cancelDelete}
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm"
-              >
-                Болих
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Dialog
+        open={showConfirm}
+        title="Устгах уу?"
+        message="Та энэ ангиллыг устгахдаа итгэлтэй байна уу?"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
     </div>
   );
 }
