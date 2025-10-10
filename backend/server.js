@@ -135,5 +135,11 @@ app.get('/protected', authenticateToken, (req, res) => {
 const organizationRoutes = require('./routes/organizationRoutes');
 app.use('/api/organizations', organizationRoutes);
 
+const serviceCategoryRoutes = require('./routes/serviceCategoryRoutes');
+app.use('/api/service-category', serviceCategoryRoutes);
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server http://localhost:${PORT}`));
+
+
