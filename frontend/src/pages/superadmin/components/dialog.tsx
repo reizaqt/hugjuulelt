@@ -1,18 +1,16 @@
 import React from "react";
 
 interface DialogProps {
-  title?: string;
-  message?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  open: boolean;     
+  title: string;              
+  message: string;          
+  onConfirm: () => void | Promise<void>; 
+  onCancel: () => void;       
 }
 
-const Dialog: React.FC<DialogProps> = ({
-  title = "Баталгаажуулалт",
-  message = "Та итгэлтэй байна уу?",
-  onConfirm,
-  onCancel,
-}) => {
+const Dialog: React.FC<DialogProps> = ({ open, title, message, onConfirm, onCancel }) => {
+  if (!open) return null;
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
       <div className="bg-white rounded-2xl p-6 shadow-lg text-center max-w-sm w-full animate-fadeIn">
