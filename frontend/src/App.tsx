@@ -5,6 +5,7 @@ import OrgTable from "./pages/superadmin/organization/orgTable";
 import ServiceCategoryPage from "./pages/superadmin/service/serviceCategoryPage";
 import SuperAdminLayout from "./pages/superadmin/components/superAdminLayout";
 import PositionCategoryPage from "./pages/superadmin/position/positionCategoryPage";
+import StatusCategoryPage from "./pages/superadmin/status/statusCategoryPage";
 const Home: React.FC = () => {
   return (
     <div>
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         <Route path="organization" element={<OrgTable />} />
         <Route path="service-category" element={<ServiceCategoryPage />} />
         <Route path="position" element={<PositionCategoryPage />} />
+        <Route path="appointment-status" element={<StatusCategoryPage />} />
       </Route>
       </Routes>
     </Router>
