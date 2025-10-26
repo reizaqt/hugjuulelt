@@ -29,8 +29,8 @@ const CreateOrg: React.FC<Props> = ({ onAdded, onClose }) => {
         org_address: orgAddress,
         email,
       });
-      onAdded(); // шинэ жагсаалтыг татаж авах
-      onClose(); // modal хаах
+      onAdded(); 
+      onClose();
     } catch (err: any) {
       setError(err.response?.data?.error || "Алдаа гарлаа");
     }

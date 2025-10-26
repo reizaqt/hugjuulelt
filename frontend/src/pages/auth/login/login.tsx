@@ -71,9 +71,9 @@ const Login: React.FC = () => {
           </button>
 
           {/* res password */}
-          {/* <div className="mt-2 flex items-center justify-end text-primary hover:underline cursor-pointer">
+          <div className="mt-2 flex items-center justify-end text-primary hover:underline cursor-pointer">
             <span>Нууц үг сэргээх</span>
-          </div> */}
+          </div>
         </form>
       </div>
 
