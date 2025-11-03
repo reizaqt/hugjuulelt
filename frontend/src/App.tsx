@@ -7,10 +7,11 @@ import SuperAdminLayout from "./pages/superadmin/components/superAdminLayout";
 import PositionCategoryPage from "./pages/superadmin/position/positionCategoryPage";
 import StatusCategoryPage from "./pages/superadmin/status/statusCategoryPage";
 import PaymentMethodPage from "./pages/superadmin/payment/paymentMethodPage";
+import CustomerPage from "./pages/users/customer/customerPage";
 const Home: React.FC = () => {
   return (
     <div>
-      <h2>amjilttaiiii!</h2>
+      <CustomerPage />
     </div>
   );
 };

@@ -7,7 +7,10 @@ module.exports = {
     extend: {
       colors: {
         primary: '#365263',
-      }
+      },
+      fontFamily: {
+        jomolhari: ['Jomolhari', 'serif'],
+      },
     },
   },
   plugins: [],
