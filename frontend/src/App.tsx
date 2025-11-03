@@ -4,10 +4,14 @@ import Login from "./pages/auth/login/login";
 import OrgTable from "./pages/superadmin/organization/orgTable";
 import ServiceCategoryPage from "./pages/superadmin/service/serviceCategoryPage";
 import SuperAdminLayout from "./pages/superadmin/components/superAdminLayout";
+import PositionCategoryPage from "./pages/superadmin/position/positionCategoryPage";
+import StatusCategoryPage from "./pages/superadmin/status/statusCategoryPage";
+import PaymentMethodPage from "./pages/superadmin/payment/paymentMethodPage";
+import CustomerPage from "./pages/users/customer/customerPage";
 const Home: React.FC = () => {
   return (
     <div>
-      <h2>amjilttaiiii!</h2>
+      <CustomerPage />
     </div>
   );
 };
@@ -22,6 +26,9 @@ const App: React.FC = () => {
         <Route path="/superadmin" element={<SuperAdminLayout />}>
         <Route path="organization" element={<OrgTable />} />
         <Route path="service-category" element={<ServiceCategoryPage />} />
+        <Route path="position" element={<PositionCategoryPage />} />
+        <Route path="appointment-status" element={<StatusCategoryPage />} />
+        <Route path="payment-method" element={<PaymentMethodPage />} />
       </Route>
       </Routes>
     </Router>
