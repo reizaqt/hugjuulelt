@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 
-export default function Header() {
+interface HeaderProps {
+  className?: string;
+}
+
+export default function Header({ className }: HeaderProps) {
   return (
-    <header className="w-full bg-neutral-100 border-b-2 border-amber-800 py-4 px-8 flex items-center justify-between">
+    <header className={`w-full bg-neutral-100 border-b-2 border-amber-800 py-4 px-8 flex items-center justify-between sticky top-0 z-50 ${className || ""}`}>
       <nav className="flex items-center gap-6 text-gray-700 font-medium font-jomolhari uppercase tracking-wide">
         <Link to="/home" className="hover:text-amber-700 transition-colors duration-200">
           HOME
@@ -11,10 +15,9 @@ export default function Header() {
           ABOUT
         </Link>
         <Link to="/home" className="hover:text-amber-700 transition-colors duration-200">
-         SERVICES
+          SERVICES
         </Link>
-       </nav>
-
+      </nav>
 
       <div className="absolute left-1/2 transform -translate-x-1/2">
         <h1 className="text-xl font-semibold text-gray-800 tracking-wide">
@@ -23,7 +26,7 @@ export default function Header() {
       </div>
 
       <div className="flex items-center font-medium font-jomolhari gap-4">
-        <Link to="/" className="text-gray-700 hover:text-amber-700  transition-colors" >
+        <Link to="/" className="text-gray-700 hover:text-amber-700 transition-colors">
           LOGIN
         </Link>
       </div>
