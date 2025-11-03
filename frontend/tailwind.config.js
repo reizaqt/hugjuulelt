@@ -10,6 +10,7 @@ module.exports = {
       },
       fontFamily: {
         jomolhari: ['Jomolhari', 'serif'],
+        lobster: ['Lobster Two', 'cursive'],
       },
     },
   },
