@@ -2,6 +2,7 @@ import Header from "./components/header";
 import HeroSection from "./components/heroSection";
 import CategorySection from "./components/categorySection";
 import solanCover from "../../../assets/solanCover.jpg";
+import AboutSection from "./components/aboutSection";
 
 export default function CustomerPage() {
   return (
@@ -24,6 +25,7 @@ export default function CustomerPage() {
         </div>
 
         <CategorySection />
+        <AboutSection />
 
       </main>
     </div>
