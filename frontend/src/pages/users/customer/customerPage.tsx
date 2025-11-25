@@ -3,6 +3,7 @@ import HeroSection from "./components/heroSection";
 import CategorySection from "./components/categorySection";
 import solanCover from "../../../assets/solanCover.jpg";
 import AboutSection from "./components/aboutSection";
+import Footer from "./components/footer";
 
 export default function CustomerPage() {
   return (
@@ -28,6 +29,9 @@ export default function CustomerPage() {
         <AboutSection />
 
       </main>
+      
+      <Footer />
     </div>
+    
   );
 }
