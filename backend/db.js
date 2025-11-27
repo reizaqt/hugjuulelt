@@ -1,16 +1,27 @@
-const mysql = require('mysql2');
-require('dotenv').config(); // .env 
+const mysql = require('mysql2/promise');
+require('dotenv').config();
 
-const db = mysql.createConnection({
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 20,
+  queueLimit: 0,
 });
 
-db.connect((err) => {
-  if (err) console.error('MySQL холболт амжилтгүй:', err);
-  else console.log('MySQL холбогдлоо');
-});
+(async () => {
+  try {
+    const conn = await pool.getConnection();
+    console.log("Yess mysql connected successfully!");
+    conn.release();
+  } catch (err) {
+    console.error("MySQL connection failed:", err.message);
+  }
+})();
 
-module.exports = db;
+module.exports = pool;
+
+
+
