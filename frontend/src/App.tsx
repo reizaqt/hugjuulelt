@@ -8,28 +8,37 @@ import PositionCategoryPage from "./pages/superadmin/position/positionCategoryPa
 import StatusCategoryPage from "./pages/superadmin/status/statusCategoryPage";
 import PaymentMethodPage from "./pages/superadmin/payment/paymentMethodPage";
 import CustomerPage from "./pages/users/customer/customerPage";
-const Home: React.FC = () => {
-  return (
-    <div>
-      <CustomerPage />
-    </div>
-  );
-};
+import ProtectedRoute from "./components/protectedRoute";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
 
-        <Route path="/superadmin" element={<SuperAdminLayout />}>
-        <Route path="organization" element={<OrgTable />} />
-        <Route path="service-category" element={<ServiceCategoryPage />} />
-        <Route path="position" element={<PositionCategoryPage />} />
-        <Route path="appointment-status" element={<StatusCategoryPage />} />
-        <Route path="payment-method" element={<PaymentMethodPage />} />
-      </Route>
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute role="customer">
+              <CustomerPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/superadmin/*"
+          element={
+            <ProtectedRoute role="superadmin">
+              <SuperAdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="organization" element={<OrgTable />} />
+          <Route path="service-category" element={<ServiceCategoryPage />} />
+          <Route path="position" element={<PositionCategoryPage />} />
+          <Route path="appointment-status" element={<StatusCategoryPage />} />
+          <Route path="payment-method" element={<PaymentMethodPage />} />
+        </Route>
       </Routes>
     </Router>
   );
