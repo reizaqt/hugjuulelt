@@ -13,7 +13,7 @@ interface Category {
   sc_desc?: string;
 }
 
-export default function ServiceCategoryPage() {
+const ServiceCategoryPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [form, setForm] = useState({ sc_name: "", sc_desc: "" });
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -25,20 +25,29 @@ export default function ServiceCategoryPage() {
   }, []);
 
   const loadCategories = async () => {
-    const res = await getServiceCategories();
-    setCategories(res.data);
+    try {
+      const res = await getServiceCategories();
+      console.log("SERVICE CATEGORY DATA:", res.data);
+      setCategories(res.data);
+    } catch (err) {
+      console.error("ServiceCategory fetch error:", err);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      await updateServiceCategory(editingId, form);
-    } else {
-      await createServiceCategory(form);
+    try {
+      if (editingId) {
+        await updateServiceCategory(editingId, form);
+      } else {
+        await createServiceCategory(form);
+      }
+      setForm({ sc_name: "", sc_desc: "" });
+      setEditingId(null);
+      loadCategories();
+    } catch (err) {
+      console.error("Submit error:", err);
     }
-    setForm({ sc_name: "", sc_desc: "" });
-    setEditingId(null);
-    loadCategories();
   };
 
   const handleEdit = (cat: Category) => {
@@ -53,8 +62,12 @@ export default function ServiceCategoryPage() {
 
   const confirmDelete = async () => {
     if (deleteId !== null) {
-      await deleteServiceCategory(deleteId);
-      loadCategories();
+      try {
+        await deleteServiceCategory(deleteId);
+        loadCategories();
+      } catch (err) {
+        console.error("Delete error:", err);
+      }
     }
     setShowConfirm(false);
     setDeleteId(null);
@@ -66,10 +79,8 @@ export default function ServiceCategoryPage() {
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto relative">
-      <h1 className="text-2xl font-semibold mb-4 text-center">
-        Үйлчилгээний ангилал
-      </h1>
+    <div className="p-4 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-semibold mb-4 text-center">Үйлчилгээний ангилал</h1>
 
       <form onSubmit={handleSubmit} className="mb-4 flex gap-2">
         <input
@@ -87,7 +98,7 @@ export default function ServiceCategoryPage() {
           onChange={(e) => setForm({ ...form, sc_desc: e.target.value })}
           className="border p-2 flex-1"
         />
-        <button className="bg-slate-700 hover:bg-slate-900 text-white text-sm px-4 py-2 rounded">
+        <button className="bg-slate-700 hover:bg-slate-900 text-white px-4 py-2 rounded text-sm">
           {editingId ? "Засах" : "Нэмэх"}
         </button>
       </form>
@@ -102,27 +113,35 @@ export default function ServiceCategoryPage() {
           </tr>
         </thead>
         <tbody>
-          {categories.map((c, i) => (
-            <tr key={c.sc_id}>
-              <td className="border p-2 text-center">{i + 1}</td>
-              <td className="border p-2">{c.sc_name}</td>
-              <td className="border p-2">{c.sc_desc}</td>
-              <td className="border p-2 flex gap-2 justify-center">
-                <button
-                  onClick={() => handleEdit(c)}
-                  className="text-slate-900 hover:text-blue-700 px-2 py-1 text-sm"
-                >
-                  Засах
-                </button>
-                <button
-                  onClick={() => openDeleteConfirm(c.sc_id)}
-                  className="text-red-600 hover:text-red-900 px-2 py-1 text-sm"
-                >
-                  Устгах
-                </button>
+          {categories.length === 0 ? (
+            <tr>
+              <td colSpan={4} className="text-center p-4 text-gray-500">
+                Ангилал байхгүй
               </td>
             </tr>
-          ))}
+          ) : (
+            categories.map((c, i) => (
+              <tr key={c.sc_id} className="hover:bg-gray-50">
+                <td className="border p-2 text-center">{i + 1}</td>
+                <td className="border p-2">{c.sc_name}</td>
+                <td className="border p-2">{c.sc_desc}</td>
+                <td className="border p-2 flex gap-2 justify-center">
+                  <button
+                    onClick={() => handleEdit(c)}
+                    className="text-slate-900 hover:text-blue-700 px-2 py-1 text-sm"
+                  >
+                    Засах
+                  </button>
+                  <button
+                    onClick={() => openDeleteConfirm(c.sc_id)}
+                    className="text-red-600 hover:text-red-900 px-2 py-1 text-sm"
+                  >
+                    Устгах
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
 
@@ -135,4 +154,6 @@ export default function ServiceCategoryPage() {
       />
     </div>
   );
-}
+};
+
+export default ServiceCategoryPage;
