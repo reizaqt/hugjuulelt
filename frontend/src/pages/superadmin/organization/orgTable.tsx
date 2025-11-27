@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { getOrganizations, deleteOrganization } from "../../../services/organizationService";
 import CreateOrg from "./crud/createOrg";
 import Dialog from "../components/dialog";
 
@@ -15,54 +15,28 @@ const OrgTable: React.FC = () => {
   const [organizations, setOrganizations] = useState<Org[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editOrg, setEditOrg] = useState<Org | null>(null);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const API_URL = "http://localhost:5000/api/organizations";
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const fetchOrganizations = async () => {
-    try {
-      const res = await axios.get(API_URL);
-      setOrganizations(res.data);
-    } catch (err) {
-      console.error(err);
-    }
+    const data = await getOrganizations();
+    setOrganizations(data);
   };
 
   useEffect(() => {
     fetchOrganizations();
   }, []);
 
-  const handleDeleteClick = (id: number) => {
-    setDeleteId(id);
-    setShowConfirm(true);
-  };
-
-  const confirmDelete = async () => {
-    if (deleteId === null) return;
-    try {
-      await axios.delete(`${API_URL}/${deleteId}`);
-      fetchOrganizations();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setShowConfirm(false);
-      setDeleteId(null);
-    }
-  };
-
-  const cancelDelete = () => {
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    await deleteOrganization(deleteId);
     setShowConfirm(false);
     setDeleteId(null);
-  };
-
-  const handleEdit = (org: Org) => {
-    setEditOrg(org);
-    setShowCreateModal(true);
+    fetchOrganizations();
   };
 
   const totalPages = Math.ceil(organizations.length / itemsPerPage);
@@ -77,15 +51,22 @@ const OrgTable: React.FC = () => {
     return pages;
   };
 
+  const handleEdit = (org: Org) => {
+    setEditOrg(org);
+    setShowCreateModal(true);
+  };
+
+  const cancelDelete = () => {
+    setShowConfirm(false);
+    setDeleteId(null);
+  };
+
   return (
     <div className="max-w-5xl mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">Бүртгэлтэй байгууллагууд</h1>
         <button
-          onClick={() => {
-            setShowCreateModal(true);
-            setEditOrg(null);
-          }}
+          onClick={() => { setShowCreateModal(true); setEditOrg(null); }}
           className="bg-slate-700 hover:bg-slate-900 text-white text-sm px-4 py-2 rounded"
         >
           Байгууллага нэмэх
@@ -124,7 +105,7 @@ const OrgTable: React.FC = () => {
                     Засах
                   </button>
                   <button
-                    onClick={() => handleDeleteClick(org.org_id)}
+                    onClick={() => { setDeleteId(org.org_id); setShowConfirm(true); }}
                     className="text-red-600 hover:text-red-900 px-2 py-1 text-sm"
                   >
                     Устгах
@@ -136,10 +117,11 @@ const OrgTable: React.FC = () => {
         </tbody>
       </table>
 
+      {/* Pagination controls */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-1">
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             className="px-2 py-1 text-gray-600 hover:bg-gray-200 rounded disabled:opacity-50"
           >
@@ -159,9 +141,7 @@ const OrgTable: React.FC = () => {
             </button>
           ))}
           <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
             className="px-2 py-1 text-gray-600 hover:bg-gray-200 rounded disabled:opacity-50"
           >
@@ -188,21 +168,19 @@ const OrgTable: React.FC = () => {
       {/* CreateOrg modal */}
       {showCreateModal && (
         <CreateOrg
-          onAdded={() => {
-            fetchOrganizations();
-            setEditOrg(null);
-          }}
+          onAdded={() => { fetchOrganizations(); setEditOrg(null); }}
           onClose={() => setShowCreateModal(false)}
           {...(editOrg ? { initialData: editOrg } : {})}
         />
       )}
 
+      {/* Delete confirmation */}
       {showConfirm && (
         <Dialog
           open={showConfirm}
           title="Устгах уу?"
           message="Та энэ байгууллагыг устгахдаа итгэлтэй байна уу?"
-          onConfirm={confirmDelete}
+          onConfirm={handleDelete}
           onCancel={cancelDelete}
         />
       )}

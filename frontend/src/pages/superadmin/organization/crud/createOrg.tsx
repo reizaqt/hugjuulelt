@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { IoClose } from "react-icons/io5";
+import React, { useState, useEffect } from "react";
+import api from "../../../../services/api";
 
 interface Props {
   onAdded: () => void;
   onClose: () => void;
+  initialData?: any;
 }
 
-const CreateOrg: React.FC<Props> = ({ onAdded, onClose }) => {
+const CreateOrg: React.FC<Props> = ({ onAdded, onClose, initialData }) => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [orgName, setOrgName] = useState("");
@@ -15,21 +15,26 @@ const CreateOrg: React.FC<Props> = ({ onAdded, onClose }) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
-  const API_URL = "http://localhost:5000/api/organizations";
+  useEffect(() => {
+    if (initialData) {
+      setPhone(initialData.phone);
+      setOrgName(initialData.org_name);
+      setOrgAddress(initialData.org_address);
+      setEmail(initialData.email);
+    }
+  }, [initialData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      await axios.post(API_URL, {
-        phone,
-        password,
-        org_name: orgName,
-        org_address: orgAddress,
-        email,
-      });
-      onAdded(); 
+      if (initialData) {
+        await api.put(`/organizations/${initialData.org_id}`, { phone, org_name: orgName, org_address: orgAddress, email });
+      } else {
+        await api.post("/organizations", { phone, org_name: orgName, org_address: orgAddress, email });
+      }
+      onAdded();
       onClose();
     } catch (err: any) {
       setError(err.response?.data?.error || "Алдаа гарлаа");

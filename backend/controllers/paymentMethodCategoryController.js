@@ -1,47 +1,54 @@
 const db = require('../db');
 
 // GET all
-const getAllCategories = (req, res) => {
-  db.query('SELECT * FROM payment_method', (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
-  });
+const getAllCategories = async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM payment_method');
+    res.json(rows);
+  } catch (err) {
+    console.error("GET ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // CREATE
-const createCategory = (req, res) => {
+const createCategory = async (req, res) => {
   const { method_name } = req.body;
-  db.query(
-    'INSERT INTO payment_method (method_name) VALUES (?)',
-    [method_name],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: result.insertId, method_name });
-    }
-  );
+  try {
+    const [result] = await db.query(
+      'INSERT INTO payment_method (method_name) VALUES (?)',
+      [method_name]
+    );
+    res.json({ method_id: result.insertId, method_name });
+  } catch (err) {
+    console.error("CREATE ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // UPDATE
-const updateCategory = (req, res) => {
+const updateCategory = async (req, res) => {
   const { id } = req.params;
   const { method_name } = req.body;
-  db.query(
-    'UPDATE payment_method SET method_name=? WHERE method_id=?',
-    [method_name, id],
-    (err) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id, method_name });
-    }
-  );
+  try {
+    await db.query('UPDATE payment_method SET method_name=? WHERE method_id=?', [method_name, id]);
+    res.json({ method_id: id, method_name });
+  } catch (err) {
+    console.error("UPDATE ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // DELETE
-const deleteCategory = (req, res) => {
+const deleteCategory = async (req, res) => {
   const { id } = req.params;
-  db.query('DELETE FROM payment_method WHERE method_id=?', [id], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
+  try {
+    await db.query('DELETE FROM payment_method WHERE method_id=?', [id]);
     res.sendStatus(204);
-  });
+  } catch (err) {
+    console.error("DELETE ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 module.exports = {

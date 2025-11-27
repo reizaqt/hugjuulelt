@@ -1,52 +1,67 @@
 const db = require('../db');
 
-// GET all
-const getAllCategories = (req, res) => {
-  db.query('SELECT * FROM service_category', (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
-  });
+// GET all categories
+const getAllCategories = async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM service_category");
+    res.json(rows);
+  } catch (err) {
+    console.error("DB ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // CREATE
-const createCategory = (req, res) => {
+const createCategory = async (req, res) => {
   const { sc_name, sc_desc } = req.body;
-  db.query(
-    'INSERT INTO service_category (sc_name, sc_desc) VALUES (?, ?)',
-    [sc_name, sc_desc],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: result.insertId, sc_name, sc_desc });
-    }
-  );
+
+  try {
+    const [result] = await db.query(
+      "INSERT INTO service_category (sc_name, sc_desc) VALUES (?, ?)",
+      [sc_name, sc_desc]
+    );
+
+    res.json({ sc_id: result.insertId, sc_name, sc_desc });
+  } catch (err) {
+    console.error("CREATE ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // UPDATE
-const updateCategory = (req, res) => {
+const updateCategory = async (req, res) => {
   const { id } = req.params;
   const { sc_name, sc_desc } = req.body;
-  db.query(
-    'UPDATE service_category SET sc_name=?, sc_desc=? WHERE sc_id=?',
-    [sc_name, sc_desc, id],
-    (err) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id, sc_name, sc_desc });
-    }
-  );
+
+  try {
+    await db.query(
+      "UPDATE service_category SET sc_name=?, sc_desc=? WHERE sc_id=?",
+      [sc_name, sc_desc, id]
+    );
+
+    res.json({ sc_id: id, sc_name, sc_desc });
+  } catch (err) {
+    console.error("UPDATE ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // DELETE
-const deleteCategory = (req, res) => {
+const deleteCategory = async (req, res) => {
   const { id } = req.params;
-  db.query('DELETE FROM service_category WHERE sc_id=?', [id], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
+
+  try {
+    await db.query("DELETE FROM service_category WHERE sc_id=?", [id]);
     res.sendStatus(204);
-  });
+  } catch (err) {
+    console.error("DELETE ERROR:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 module.exports = {
   getAllCategories,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 };
