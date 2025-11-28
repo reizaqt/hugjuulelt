@@ -115,7 +115,7 @@ const Login: React.FC = () => {
       const data = await login(phone, password);
 
       if (data.role === "superadmin") navigate("/superadmin/organization");
-      else if (data.role === "organization") navigate("/organization/home");
+      else if (data.role === "organization") navigate("/organization-home");
       else if (data.role === "customer") navigate("/home");
       else setError("User role is underfined");
     } catch (err: any) {
@@ -127,14 +127,13 @@ const Login: React.FC = () => {
     <div className="relative flex items-center justify-center min-h-screen bg-[#eef3fc]">
 
       {/*circles */}
-      <div className="absolute top-10 right-32 w-64 h-64 border-4 border-blue-400 rounded-full opacity-60"></div>
-      <div className="absolute top-48 right-20 w-20 h-20 border-2 border-blue-300 rounded-full opacity-40"></div>
-      <div className="absolute bottom-20 left-60 w-28 h-28 border-4 border-blue-300 rounded-full opacity-40"></div>
-      <div className="absolute bottom-32 left-52 w-14 h-14 border-2 border-blue-300 rounded-full opacity-40"></div>
-
+      <div className="absolute top-10 right-32 w-64 h-64 border-4 border-sky-600 rounded-full opacity-60"></div>
+      <div className="absolute top-48 right-20 w-20 h-20 border-2 border-sky-500 rounded-full opacity-40"></div>
+      <div className="absolute bottom-20 left-60 w-28 h-28 border-4 border-sky-500 rounded-full opacity-40"></div>
+      <div className="absolute bottom-32 left-52 w-14 h-14 border-2 border-sky-400 rounded-full opacity-40"></div>
       <div className="flex bg-white shadow-xl rounded-xl overflow-hidden w-[900px]">
 
-        <div className="w-1/2 bg-gradient-to-b from-blue-500 to-blue-700 text-white px-10 py-16 flex flex-col justify-center">
+        <div className="w-1/2 bg-gradient-to-b from-sky-500 to-sky-900 text-white px-10 py-16 flex flex-col justify-center">
           <h1 className="text-4xl md:text-6xl font-extrabold mb-8 text-center text-gradient-to-r from-purple-500 via-pink-500 to-red-500 drop-shadow-lg">
             Velora
             </h1>
@@ -186,14 +185,14 @@ const Login: React.FC = () => {
                 <input type="checkbox" />
                 Сануулах
               </label>
-              <button type="button" className="text-blue-500 hover:underline">
+              <button type="button" className="text-sky-800 hover:underline">
                 Нууц үг солих
               </button>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
+              className="w-full bg-sky-600 hover:bg-sky-900 text-white py-2 rounded transition"
             >
               Нэвтрэх
             </button>

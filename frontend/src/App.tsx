@@ -9,6 +9,7 @@ import StatusCategoryPage from "./pages/superadmin/status/statusCategoryPage";
 import PaymentMethodPage from "./pages/superadmin/payment/paymentMethodPage";
 import CustomerPage from "./pages/users/customer/customerPage";
 import ProtectedRoute from "./components/protectedRoute";
+// import OrganizationPage from "./pages/users/organization/organizationPage";
 
 const App: React.FC = () => {
   return (
@@ -39,6 +40,7 @@ const App: React.FC = () => {
           <Route path="appointment-status" element={<StatusCategoryPage />} />
           <Route path="payment-method" element={<PaymentMethodPage />} />
         </Route>
+        {/* <Route path="organization-home" element={<OrganizationPage />} /> */}
       </Routes>
     </Router>
   );
