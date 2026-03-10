@@ -8,14 +8,14 @@ export default function Header({ className }: HeaderProps) {
   return (
     <header className={`w-full bg-neutral-100 border-b-2 border-amber-800 py-4 px-8 flex items-center justify-between sticky top-0 z-50 ${className || ""}`}>
       <nav className="flex items-center ml-2 gap-8 text-gray-700 font-medium font-jomolhari uppercase tracking-wide">
-        <Link to="/home" className="hover:text-amber-700 transition-colors duration-200">
+        <Link to="/customer" className="hover:text-amber-700 transition-colors duration-200">
           HOME
         </Link>
-        <Link to="/home" className="hover:text-amber-700 transition-colors duration-200">
+        <Link to="/customer" className="hover:text-amber-700 transition-colors duration-200">
           ABOUT
         </Link>
-        <Link to="/home" className="hover:text-amber-700 transition-colors duration-200">
-          SERVICES
+        <Link to="/customer/schedule" className="hover:text-amber-700 transition-colors duration-200">
+          SCHEDULE
         </Link>
       </nav>
 

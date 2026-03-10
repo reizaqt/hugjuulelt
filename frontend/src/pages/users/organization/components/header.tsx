@@ -21,7 +21,7 @@ const Header = () => {
 
   return (
     <header className="flex justify-between items-center h-16 px-8 shadow-md bg-neutral-100 border-b-2 border-sky-400 text-black">
-      <div className="text-xl font-bold">Org_name</div>
+      <div className="text-xl font-bold"></div>
 
       <div className="relative" ref={dropdownRef}>
         <button
